@@ -1,12 +1,3 @@
-"""
-Вариант 3. Разработать пакет для обработки целых чисел, позволяющий:
-1) удалить из числа повторяющиеся цифры;
-2) вывести все делители числа по возрастанию;
-3) определить цифры, которые встречаются в записи двух чисел;
-4) поменять местами первую и последнюю цифры в числе;
-5) удалить из записи первого числа цифры, входящие в запись второго.
-"""
-
 # Основной файл лабораторной работы номер 16
 from IntPy import *
 
@@ -31,18 +22,23 @@ while choice != 6:
     match choice:
         case 1:
             num = int(input("Введите число: "))
-            print(f"Число без повторяющихся цифр: {IntDelRepeats.delRepeats(num)}")
+            result = IntDelRepeats.delRepeats(num)
+            print(f"Число без повторяющихся цифр: {result}")
         case 2:
             num = int(input("Введите число: "))
-            print(f"Вот все делители числа {num}\n{AllDel.allDel(num)}")
+            result = AllDel.allDel(num)
+            print(f"Вот все делители числа {num}\n{result}")
         case 3:
             num1 = int(input("Введите первое число: "))
             num2 = int(input("Введите второе число: "))
-            print(f"Вот цифры, встречающиеся сразу в двух числах:\n{RepNums.repNums(num1, num2)}")
+            result = RepNums.repNums(num1, num2)
+            print(f"Вот цифры, встречающиеся сразу в двух числах:\n{result}")
         case 4:
             num = int(input("Введите число: "))
-            print(f"Результат: {ReversStartEnd.rev(num)}")
+            result = ReversStartEnd.rev(num)
+            print(f"Результат: {result}")
         case 5:
             num1 = int(input("Введите первое число: "))
             num2 = int(input("Введите второе число: "))
-            print(f"Результат: {Substractor.substractor(num1, num2)}")
+            result = Substractor.substractor(num1, num2)
+            print(f"Результат: {result}")

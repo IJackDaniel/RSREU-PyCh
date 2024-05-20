@@ -1,5 +1,6 @@
 from random import randrange, choice
 
+
 n = int(input("Введите количество строк: "))
 f = open("Data.txt", "w")
 
