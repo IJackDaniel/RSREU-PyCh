@@ -39,8 +39,8 @@ for s in f:
 f.close()
 
 print(f"Номер строки: {res_line}")
-print(f"Длина строки: {res_mx}")
-print(f"Строка: {res_str}")
+# print(f"Длина строки: {res_mx}")
+# print(f"Строка: {res_str}")
 
 arr = []
 num = ""
