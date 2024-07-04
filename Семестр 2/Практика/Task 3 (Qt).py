@@ -1,4 +1,5 @@
-from PyQt5.QtWidgets import QMessageBox, QAction, QMenu, QLineEdit, QButtonGroup, QRadioButton, QApplication, QMainWindow, QLabel, QPushButton
+from PyQt5.QtWidgets import QMessageBox, QAction, QMenu, QLineEdit, QButtonGroup, QRadioButton
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton
 from PyQt5.QtCore import Qt
 import sys
 
@@ -86,6 +87,14 @@ class Window(QMainWindow):
         self.ent_hat.move(startx2, (y2 * 2 + dsty)//2)
         self.ent_hat.setVisible(False)
 
+        self.ent_xs.mousePressEvent = self.mousePressEvent
+        self.ent_s.mousePressEvent = self.mousePressEvent
+        self.ent_m.mousePressEvent = self.mousePressEvent
+        self.ent_l.mousePressEvent = self.mousePressEvent
+        self.ent_xl.mousePressEvent = self.mousePressEvent
+        self.ent_xxl.mousePressEvent = self.mousePressEvent
+        self.ent_hat.mousePressEvent = self.mousePressEvent
+
         self.btn1 = QPushButton("Узнать цену", self)
         self.btn2 = QPushButton("Очистить", self)
         self.btn3 = QPushButton("Сохранить", self)
@@ -121,13 +130,21 @@ class Window(QMainWindow):
         cmenu = QMenu(self)
 
         newAct = QAction("Очистить историю", self)
+        inf1Act = QAction("О программе", self)
+        inf2Act = QAction("Об авторе", self)
 
         cmenu.addAction(newAct)
+        cmenu.addAction(inf1Act)
+        cmenu.addAction(inf2Act)
 
         action = cmenu.exec_(self.mapToGlobal(event.pos()))
 
         if action == newAct:
             self.clear_history()
+        elif action == inf1Act:
+            self.showInfo(1)
+        elif action == inf2Act:
+            self.showInfo(2)
 
     def save_history(self):
         txt = self.lbl_result.text()
@@ -140,11 +157,16 @@ class Window(QMainWindow):
     def var_change(self, button):
         self.data_clear()
         tp = button.text()
-        if tp == "Футболка": self.var = 0
-        elif tp == "Свитшот": self.var = 1
-        elif tp == "Худи": self.var = 2
-        elif tp == "Панамка": self.var = 3
-        elif tp == "Кепка": self.var = 4
+        if tp == "Футболка":
+            self.var = 0
+        elif tp == "Свитшот":
+            self.var = 1
+        elif tp == "Худи":
+            self.var = 2
+        elif tp == "Панамка":
+            self.var = 3
+        elif tp == "Кепка":
+            self.var = 4
         if self.var <= 2:
             self.ent_xs.setVisible(True)
             self.ent_s.setVisible(True)
@@ -186,6 +208,8 @@ class Window(QMainWindow):
                 xl = int(self.ent_xl.text()) if self.ent_xl.text() != "" else 0
                 xxl = int(self.ent_xxl.text()) if self.ent_xxl.text() != "" else 0
                 cnt = xs + s + m + l + xl + xxl
+                if xs < 0 or s < 0 or m < 0 or l <0 or xl < 0 or xxl < 0:
+                    xs = int("LOL")
                 name = None
                 if self.var == 0:
                     name = "Футболок"
@@ -219,6 +243,22 @@ class Window(QMainWindow):
         msgBox.setText(warning_text)
         msgBox.setWindowTitle("Warning")
         msgBox.exec_()
+
+    def showInfo(self, infType):
+        msgBox = QMessageBox(self)
+        msgBox.setIcon(QMessageBox.Information)
+        if infType == 1:
+            info_text = "Программа позволяет вам рассчитать стоимость партий товаров в магазине CorgiShop"
+            title = "О программе"
+        else:
+            info_text = "Чтобы поддержать автора, вы можете перевести деньги по номеру\
+ +7-900-602-43-10 на Сбербанк или Тинькофф. Он очень хороший человек и любит корги"
+            title = "Об авторе"
+        msgBox.setText(info_text)
+        msgBox.setWindowTitle(title)
+        msgBox.exec_()
+
+
 
     def cost(self, cnt, var, name):
         """ Поиск корней линейного и квадратного уравнения """
@@ -280,6 +320,11 @@ class Window(QMainWindow):
                 else:
                     cst = 400
         self.lbl_result.setText(f"Цена для {cnt} {name}: {cst * cnt} рублей")
+
+    def mousePressEvent(self, event):
+        if self.flag:
+            if event.button() == Qt.LeftButton:
+                self.data_clear()
 
     def data_clear(self):
         """ Очистка полей для ввода и поля с ценой """
