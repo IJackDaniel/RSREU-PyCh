@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QMessageBox, QAction, QMenu, QLineEdit, QButtonGroup, QRadioButton
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton, QWidget
 from PyQt5.QtCore import Qt
 import sys
 
@@ -95,6 +95,8 @@ class Window(QMainWindow):
         self.ent_xxl.mousePressEvent = self.mousePressEvent
         self.ent_hat.mousePressEvent = self.mousePressEvent
 
+        self.txt_sf = ""
+
         self.btn1 = QPushButton("Узнать цену", self)
         self.btn2 = QPushButton("Очистить", self)
         self.btn3 = QPushButton("Сохранить", self)
@@ -130,17 +132,23 @@ class Window(QMainWindow):
         cmenu = QMenu(self)
 
         newAct = QAction("Очистить историю", self)
+        win2Act = QAction("История вычислений")
         inf1Act = QAction("О программе", self)
         inf2Act = QAction("Об авторе", self)
 
         cmenu.addAction(newAct)
+        cmenu.addAction(win2Act)
         cmenu.addAction(inf1Act)
         cmenu.addAction(inf2Act)
 
         action = cmenu.exec_(self.mapToGlobal(event.pos()))
 
+        txt = self.lbl_story.text()
+
         if action == newAct:
             self.clear_history()
+        elif action == win2Act:
+            self.open_second_form(txt)
         elif action == inf1Act:
             self.showInfo(1)
         elif action == inf2Act:
@@ -208,7 +216,7 @@ class Window(QMainWindow):
                 xl = int(self.ent_xl.text()) if self.ent_xl.text() != "" else 0
                 xxl = int(self.ent_xxl.text()) if self.ent_xxl.text() != "" else 0
                 cnt = xs + s + m + l + xl + xxl
-                if xs < 0 or s < 0 or m < 0 or l <0 or xl < 0 or xxl < 0:
+                if xs < 0 or s < 0 or m < 0 or l < 0 or xl < 0 or xxl < 0:
                     xs = int("LOL")
                 name = None
                 if self.var == 0:
@@ -257,8 +265,6 @@ class Window(QMainWindow):
         msgBox.setText(info_text)
         msgBox.setWindowTitle(title)
         msgBox.exec_()
-
-
 
     def cost(self, cnt, var, name):
         """ Поиск корней линейного и квадратного уравнения """
@@ -319,12 +325,25 @@ class Window(QMainWindow):
                     cst = 370
                 else:
                     cst = 400
-        self.lbl_result.setText(f"Цена для {cnt} {name}: {cst * cnt} рублей")
+        txt = f"Цена для {cnt} {name}: {cst * cnt} рублей"
+        self.lbl_result.setText(txt)
+        self.txt_sf = self.txt_sf + "\n" + txt
 
     def mousePressEvent(self, event):
         if self.flag:
             if event.button() == Qt.LeftButton:
                 self.data_clear()
+
+    def closeEvent(self, e):
+        result = QMessageBox.question(self, "Подтверждение закрытия окна",
+                                                "Вы действительно хотите закрыть окно?",
+                                                QMessageBox.Yes | QMessageBox.No,
+                                                QMessageBox.No)
+        if result == QMessageBox.Yes:
+            e.accept()
+            QWidget.closeEvent(self, e)
+        else:
+            e.ignore()
 
     def data_clear(self):
         """ Очистка полей для ввода и поля с ценой """
@@ -339,6 +358,26 @@ class Window(QMainWindow):
         self.lbl_result.setText("")
         self.btn2.setEnabled(False)
         self.btn3.setEnabled(False)
+
+    def open_second_form(self, txt):
+        self.second_form = SecondForm(self.txt_sf)
+        self.second_form.show()
+
+
+class SecondForm(QWidget):
+    def __init__(self, txt):
+
+        super(SecondForm, self).__init__()
+        self.setGeometry(1200, 250, 600, 600)
+        self.setFixedSize(600, 600)
+        self.setWindowTitle('Полная история рассчётов')
+
+        self.lbl = QLabel(self)
+        self.lbl.resize(560, 560)
+        self.lbl.move(20, 20)
+        self.lbl.setStyleSheet("background-color: white; border: 2px solid black")
+        self.lbl.setText(txt)
+        self.lbl.setAlignment(Qt.AlignTop | Qt.AlignLeft)
 
 
 def application():

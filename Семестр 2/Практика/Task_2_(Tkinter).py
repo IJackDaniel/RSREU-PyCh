@@ -121,7 +121,7 @@ def history_clear():
         f.close()
 
 
-def data_clear(): #
+def data_clear():
     """ Очистка полей для ввода и поля с ценой """
     entry_xs.delete(0, tk.END)
     entry_s.delete(0, tk.END)
@@ -137,7 +137,7 @@ def data_clear(): #
     button_clear['state'] = 'disable'
 
 
-def run_solution(): #
+def run_solution():
     """ Считывание параметров """
     global xs, s, m, l, xl, xxl, xxxl, hat
     name = ""
@@ -184,7 +184,7 @@ def run_solution(): #
         button_clear['state'] = 'active'
 
 
-def cost(cnt, type_pr): #
+def cost(cnt, type_pr):
     """ Поиск корней линейного и квадратного уравнения """
     cst = 0
     match type_pr:
