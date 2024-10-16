@@ -23,13 +23,13 @@ def RightBinS(arr, x):
     return r
 
 
-# n, k = list(map(int, input().split()))
-# arr1 = list(map(int, input().split()))
-# arr2 = list(map(int, input().split()))
+n, k = list(map(int, input().split()))
+arr1 = list(map(int, input().split()))
+arr2 = list(map(int, input().split()))
 
-n, k = 5, 5
-arr1 = [1, 3, 5, 7, 9]
-arr2 = [2, 4, 8, 1, 6]
+# n, k = 5, 5
+# arr1 = [1, 3, 5, 7, 9]
+# arr2 = [2, 4, 8, 1, 6]
 
 for el in arr2:
     ind_1 = LeftBinS(arr1, el)
